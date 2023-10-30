@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+}
+
+header {
+    display: flex;
+    background-color: grey;
+    align-items: center;
+
+    & h1 {
+        margin-left: 1em;
+    };
+    
+    & nav {
+        margin-left: auto;
+    };
+    
+    & ul {
+        display: inline-flex;
+        list-style-type: none;
+    };
+    
+    & li {
+        margin: 0 2rem;
+    };
+    
+    & a {
+        color: inherit;
+        text-decoration: inherit;
+    };
+}
+
+
+
+main, footer {
+    margin-left: 1em;
+    margin-right: 1em;
+}
