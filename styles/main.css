@@ -5,6 +5,7 @@
 
 :root {
     --grey: color(display-p3 0.5 0.5 0.5);
+    --grey-fallback: color-mix(in srgb, #808080 100%, white);
     font-family: myFirstFont, "Times New Roman", Times, serif;
 }
 
@@ -32,7 +33,7 @@ body:has(main) {
 
 header {
     display: flex;
-    background-color: var(--grey, grey);
+    background-color: var(--grey, --grey-fallback, grey);
     align-items: center;
 
     & h1 {
