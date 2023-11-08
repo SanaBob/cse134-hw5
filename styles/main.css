@@ -4,6 +4,7 @@
 }
 
 :root {
+    --grey: color(display-p3 0.5 0.5 0.5);
     font-family: myFirstFont, "Times New Roman", Times, serif;
 }
 
@@ -31,7 +32,7 @@ body:has(main) {
 
 header {
     display: flex;
-    background-color: color(display-p3 0.5 0.5 0.5);
+    background-color: var(--grey, grey);
     align-items: center;
 
     & h1 {
