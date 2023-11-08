@@ -1,10 +1,37 @@
-body {
+@font-face {
+    font-family: myFirstFont;
+    src: url(RobotoSlab-VariableFont_wght.ttf);
+}
+
+:root {
+    font-family: myFirstFont, "Times New Roman", Times, serif;
+}
+
+img {
+    transition: width height 1s;
+}
+
+@keyframes enlarge {
+    from {transform: scale(1.05);}
+    to {transform: scale(1.10);}
+}  
+
+img:hover {
+    transform: scale(1.10);
+    animation-name: enlarge;
+    animation-duration: 4s;
+}
+
+body:has(main) {
     margin: 0;
 }
 
+
+
+
 header {
     display: flex;
-    background-color: grey;
+    background-color: color(display-p3 0.5 0.5 0.5);
     align-items: center;
 
     & h1 {
@@ -30,6 +57,32 @@ header {
     };
 }
 
+@media screen and (max-width: 600px) {
+    header {
+        display: flex;
+        background-color: color(display-p3 0.5 0.5 0.5);
+        align-items: center;
+        font-size: 0.5rem;
+
+        & h1 {
+            margin-left: 1em;
+        };
+        
+        & nav {
+            margin-left: auto;
+        };
+        
+        & ul {
+            display: inline-flex;
+            list-style-type: none;
+        };
+        
+        & a {
+            color: inherit;
+            text-decoration: inherit;
+        };
+    }
+}
 
 
 main, footer {
