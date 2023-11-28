@@ -7,21 +7,18 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link href="images/favicon.ico" rel="icon" />
     <link rel="stylesheet" type="text/css" href="styles/main.css" />
-    <style>
-        body {background-color: white;}
-    </style>
-
 </head>
 <body>
     <header>
         <h1><a href="index.html">Golf Website</a></h1>
-        <!-- <h2>Hyperlinks</h2> -->
+        
         <nav>
             <ul>
                 <li><a href="news.html">News</a></li>
                 <li><a href="products.html">Products</a></li>
                 <li><a href="courses.html">Courses</a></li>
                 <li><a href="tournaments.html">Tournaments</a></li>
+                <li><a style="display:none" id="darkModeButton" href="#" onclick="toggleDarkMode(true);return false;">Dark Mode</a></li>
             </ul>
         </nav>
     </header>
@@ -51,10 +48,191 @@
                 </details>
             </div>
         </section>
+        <hr>
+        <section class="form-container">
+            <h3>Contact Us</h3>
+            <form action="https://httpbin.org/post" method="POST" id="form_request" required>
+                <input type="hidden" id="possible_bot" name="possible_bot" value="true">
+                <input type="hidden" id="form_errors" name="form_errors" value="">
+                
+                <label for="name">Name (Only letters allowed)</label>
+                <input type="text" id="name" name="name" placeholder="Your name.." minlength="1" maxlength="32" pattern="[A-Za-z ]*" required><br>
+            
+            
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="sample@example.com" pattern="[A-Za-z0-9@_\-.]*" minlength="1" maxlength="50" required><br>
+            
+                <label for="comments" id="comments_label">Comments (100 Characters remaining)</label>
+                <textarea id="comments" name="comments" placeholder="Write something.." minlength="1" maxlength="100" required></textarea><br>
+
+                <input type="submit" value="Submit"><br>
+                
+                <label for="output_info" id="output_info_label">Output Info</label>
+                <output style="color:green !important" form="form_request" id="output_info" name="output_info" for="info"></output>
+                <label for="output_error" id="output_error_label">Output Error</label>
+                <output style="color:red !important" form="form_request" id="output_error" name="output_error" for="error"></output>
+            </form>
+        </section>
     </main>
     <footer>
         <hr>
         <p>made by <span>quan le</span></p>
     </footer>
+    <script>
+        const toggleDarkMode = (updateLocalStorage) => {
+            const darkModeString = localStorage.getItem("darkMode") || "false"
+            const darkModeBool = darkModeString === "true"
+            if (updateLocalStorage) {
+                localStorage.setItem("darkMode", !darkModeBool)
+            }
+            const body = document.body
+            body.classList.toggle("dark-mode")
+        }
+
+        document.getElementById('darkModeButton').style.display = 'block'; // if js is off no dark mode button
+
+        const darkMode = localStorage.getItem("darkMode") || "false"
+        if (darkMode === "true") {
+            toggleDarkMode(false)
+        }
+
+        ///////////////////////
+
+        const form_errors = []
+        const name = document.getElementById("name")
+        const email = document.getElementById("email")
+        const comments = document.getElementById("comments")
+        const form = document.getElementById("form_request")
+
+        const fadeOutEffect = (fadeTarget) => {
+            const fadeEffect = setInterval(() => {
+                if (!fadeTarget.style.opacity) {
+                    fadeTarget.style.opacity = 1;
+                }
+                if (fadeTarget.style.opacity > 0) {
+                    fadeTarget.style.opacity -= 0.1;
+                } else {
+                    clearInterval(fadeEffect);
+                }
+            }, 200);
+        }
+
+        const checkValidityAndOutput = (htmlObject, e) => {
+            let errorMsg = ""
+            const invalidInputErr = `Invalid input for ${htmlObject.name} field.`
+            const patternMismatchErr = `Illegal character for ${htmlObject.name} field.`
+            const tooLongErr = `Input too long for ${htmlObject.name} field.`
+            const tooShortErr = `Input too short for ${htmlObject.name} field.`
+
+            if (htmlObject.validity.patternMismatch) {
+                htmlObject.setCustomValidity(patternMismatchErr)
+                errorMsg += htmlObject.validationMessage + "\n"
+                form_errors.push({
+                    "error": htmlObject.validationMessage,
+                    "ts": Date.now()
+                })
+            } else {
+                htmlObject.setCustomValidity("")
+            }
+
+            if (htmlObject.validity.tooLong) {
+                htmlObject.setCustomValidity(tooLongErr)
+                errorMsg += htmlObject.validationMessage + "\n"
+                form_errors.push({
+                    "error": htmlObject.validationMessage,
+                    "ts": Date.now()
+                })
+            } else {
+                htmlObject.setCustomValidity("")
+            }
+
+            if (!htmlObject.checkValidity()) {
+                htmlObject.setCustomValidity(invalidInputErr)
+                errorMsg += htmlObject.validationMessage + "\n"
+                form_errors.push({
+                    "error": htmlObject.validationMessage,
+                    "ts": Date.now()
+                })
+            } else {
+                htmlObject.setCustomValidity("")
+            }
+
+            if (htmlObject.validity.tooShort) {
+                htmlObject.setCustomValidity(tooShortErr)
+                errorMsg += htmlObject.validationMessage + "\n"
+                form_errors.push({
+                    "error": htmlObject.validationMessage,
+                    "ts": Date.now()
+                })
+            } else {
+                htmlObject.setCustomValidity("")
+            }
+
+            if (htmlObject.name === "comments") {
+                if (e.target.value.match(/[<>'"/`%~@#$^*()_+=[\]{}|\\]/)) {
+                    htmlObject.setCustomValidity(patternMismatchErr)
+                    errorMsg += htmlObject.validationMessage + "\n"
+                    form_errors.push({
+                        "error": htmlObject.validationMessage,
+                        "ts": Date.now()
+                    })
+                } else {
+                    htmlObject.setCustomValidity("")
+                }
+            }
+
+            document.getElementById("form_errors").value = JSON.stringify(form_errors)
+
+            if (errorMsg === "") {
+                const output_info = document.getElementById("output_info")
+                output_info.innerHTML = `${htmlObject.name} field OK`
+                output_info.style.opacity = 1;
+                fadeOutEffect(output_info)
+                const output_error = document.getElementById("output_error");
+                output_error.innerHTML = ""
+                output_error.style.opacity = 1;
+                fadeOutEffect(output_error)
+            } else {
+                const output_info = document.getElementById("output_info")
+                output_info.innerHTML = ""
+                output_info.style.opacity = 1;
+                fadeOutEffect(output_info)
+                const output_error = document.getElementById("output_error");
+                output_error.innerHTML = errorMsg
+                output_error.style.opacity = 1;
+                fadeOutEffect(output_error)
+            }
+        }
+
+        const checkCharLimit = (htmlObject, e) => {
+            const label = document.getElementById(`${htmlObject.name}_label`)
+            label.innerHTML = `Comments (${100 - e.target.value.length} Characters remaining)`
+            if (100 - e.target.value.length < 25) {
+                label.style.color = "red"
+            } else {
+                label.style.color = "inherit"
+            }
+        }
+
+        name.addEventListener("change", (e) => {
+            checkValidityAndOutput(name, e)
+        });
+
+        email.addEventListener("change", (e) => {
+            checkValidityAndOutput(email, e)
+        });
+
+        comments.addEventListener("change", (e) => {
+            checkValidityAndOutput(comments, e)
+        });
+
+        comments.addEventListener("input", (e) => {
+            checkCharLimit(comments, e)
+        });
+
+        const submitForm = (e) => {
+            checkValidityAndOutput(form, e)
+        } 
+    </script>
 </body>
 </html>

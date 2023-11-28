@@ -86,8 +86,41 @@ header {
     }
 }
 
+.dark-mode {
+    background-color: black; 
+    color: white;
+}
 
 main, footer {
     margin-left: 1em;
     margin-right: 1em;
+}
+
+.form-container {
+    display: block;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input:user-invalid {
+    border: 2px solid red;
+}
+
+input:valid {
+    border: 2px solid green;
+}
+
+textarea:user-invalid {
+    border: 2px solid red;
+}
+
+textarea:valid {
+    border: 2px solid green;
 }

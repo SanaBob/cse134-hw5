@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Golf Website</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href="images/favicon.ico" rel="icon" />
+    <link rel="stylesheet" type="text/css" href="styles/main.css" />
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">Golf Website</a></h1>
+        
+        <nav>
+            <ul>
+                <li><a href="news.html">News</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="tournaments.html">Tournaments</a></li>
+                <li><a style="display:none" id="darkModeButton" href="#" onclick="toggleDarkMode(true);return false;">Dark Mode</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h3>About Us</h3>
+            <p>We are <b><em>all around golf website</em></b>, designed to help you about all things about golf.<br>We have information about golf news, featured golf products, golf courses around San Diego, and upcoming golf tournaments.</p>
+        </section>
+        <section>
+            <h3>Policy</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Neque viverra justo nec ultrices dui sapien eget.</p>
+        </section>
+        <section>
+            <h3>FAQ</h3>
+            <div>
+                <details>
+                    <summary><i>How do you make money?</i></summary>
+                    <p>We provide information about courses, lessons, and products which are linked to third-party websites through a referral link, which <strong>benefits customers with discounted rates and us</strong>.</p>
+                </details>
+                <details>
+                    <summary><i>Lorem ipsum?</i></summary>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Neque viverra justo nec ultrices dui sapien eget.</p>
+                </details>
+                <details>
+                    <summary><i>Lorem ipsum?</i></summary>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Neque viverra justo nec ultrices dui sapien eget.</p>
+                </details>
+            </div>
+        </section>
+        <hr>
+        <section class="form-container">
+            <h3>Contact Us</h3>
+            <form action="https://httpbin.org/post" method="POST" id="form_request" required>
+                <input type="hidden" id="possible_bot" name="possible_bot" value="true">
+                <input type="hidden" id="form_errors" name="form_errors" value="">
+                
+                <label for="name">Name (Only letters allowed)</label>
+                <input type="text" id="name" name="name" placeholder="Your name.." minlength="1" maxlength="32" pattern="[A-Za-z ]*" required><br>
+            
+            
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="sample@example.com" pattern="[A-Za-z0-9@_\-.]*" minlength="1" maxlength="50" required><br>
+            
+                <label for="comments" id="comments_label">Comments (100 Characters remaining)</label>
+                <textarea id="comments" name="comments" placeholder="Write something.." minlength="1" maxlength="100" required></textarea><br>
+
+                <input type="submit" value="Submit"><br>
+                
+                <label for="output_info" id="output_info_label">Output Info</label>
+                <output style="color:green !important" form="form_request" id="output_info" name="output_info" for="info"></output>
+                <label for="output_error" id="output_error_label">Output Error</label>
+                <output style="color:red !important" form="form_request" id="output_error" name="output_error" for="error"></output>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <hr>
+        <p>made by <span>quan le</span></p>
+    </footer>
+</body>
+</html>
