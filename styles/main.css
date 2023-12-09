@@ -28,8 +28,9 @@ body:has(main) {
     margin: 0;
 }
 
-
-
+#star-container:hover {
+    cursor: default;
+}
 
 header {
     display: flex;

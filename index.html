@@ -76,9 +76,122 @@
     </main>
     <footer>
         <hr>
+        <rating-widget>
+            <form id="rating-form" action="https://httpbin.org/post" method="POST">
+                <label for="rating">How satisfied are you?</label>
+                <input type="hidden" name="question" value="How satisfied are you?">
+                <input type="hidden" id="sentBy" name="sentBy" value="HTML">
+                <input type="number" id="rating" name="rating" min="1" max="5" value="0" required>
+                <button id="submit-rating" type="submit">Submit</button>
+            </form>
+        </rating-widget>
+        <hr>
+        <section id="weather-section" style="display:none">
+            <p id="weather"></p>
+            <img id="img">
+        </section>
+        <weather-widget>
+            <h3 id="weather-unavailable">Current Weather Conditions Unavailable</h3>
+        </weather-widget>
+        <hr>
         <p>made by <span>quan le</span></p>
     </footer>
     <script>
+        
+
+        
+        const getWeather = async () => {
+            const ucsdCoordinates = {lat:32.8753, lon: -117.2361}
+            const res1 = await fetch(`https://api.weather.gov/points/${ucsdCoordinates.lat},${ucsdCoordinates.lon}`)
+            const data1 = await res1.json()
+            const res2 = await fetch(data1.properties.forecast)
+            const data2 = await res2.json()
+            const currentWeather = document.createElement('h3')
+            currentWeather.innerHTML = "Current Weather"
+            const weather = document.createElement('p')
+            weather.innerHTML = `${data2.properties.periods[0].shortForecast} ${data2.properties.periods[0].temperature}°${data2.properties.periods[0].temperatureUnit}`
+            const weatherImage = document.createElement('img')
+            weatherImage.src = data2.properties.periods[0].icon
+
+            class Weather extends HTMLElement {
+                constructor() {
+                    super()
+                    this.attachShadow({ mode: 'open' })
+                    this.shadowRoot.appendChild(currentWeather)
+                    this.shadowRoot.appendChild(weather)
+                    this.shadowRoot.appendChild(weatherImage)
+                }
+            }
+            window.customElements.define('weather-widget', Weather)
+        }   
+
+        let stars = []
+        const rating = document.getElementById('rating')
+        const form_rating = document.getElementById('rating-form')
+
+        const getRatingWidget = () => {
+            const starContainer = document.createElement('p')
+            for (let i = 0; i < 5; i++) {
+                const star = document.createElement('span')
+                star.setAttribute('style', 'font-size:2rem')
+                star.innerHTML = "★"
+                stars.push(star)
+                star.addEventListener('mouseover', () => {
+                    rating.value = i + 1
+                    stars.forEach((star, starIndex) => {
+                        if (starIndex <= i) {
+                            star.style.color = "yellow"
+                        }
+                    })
+                })
+                star.addEventListener("mouseout", () => {
+                    stars.forEach((star, i) => {
+                        star.style.color = "inherit"
+                    })
+                })
+                
+            } 
+
+            class RatingWidget extends HTMLElement {
+                constructor() {
+                    super()
+                    this.attachShadow({ mode: 'open' })
+                    const label = document.createElement('label')
+                    label.innerHTML = "How satisfied are you?"
+                    const br = document.createElement('br')
+                    this.shadowRoot.appendChild(label)
+                    this.shadowRoot.appendChild(br)
+                    stars.forEach(element => {
+                        element.addEventListener('click', async () => {
+                        document.getElementById('sentBy').value = "JS"
+                        this.shadowRoot.removeChild(this.shadowRoot.lastChild)
+                        const feedback = document.createElement('p')
+                        feedback.innerHTML = rating.value / 5 >= 0.8 ? `Thanks for ${rating.value} star rating!` : `Thanks for your feedback of ${rating.value} stars. We'll try to do better!`
+                        this.shadowRoot.appendChild(feedback)
+                        const res = await fetch("https://httpbin.org/post", {
+                            method: 'post',
+                            body: new URLSearchParams(new FormData(form_rating)),
+                            headers: {
+                                "X-Sent-By": "JS"
+                            }
+                        })
+                        const data = await res.json()
+                        console.log(data)
+                    })
+                        this.shadowRoot.appendChild(element)
+                    })
+                    this.shadowRoot.appendChild(document.createElement('p'))
+                }
+            }
+
+            window.customElements.define('rating-widget', RatingWidget)
+        }
+
+        getWeather()
+        getRatingWidget()
+
+        /////////////
+
         const toggleDarkMode = (updateLocalStorage) => {
             const darkModeString = localStorage.getItem("darkMode") || "false"
             const darkModeBool = darkModeString === "true"
